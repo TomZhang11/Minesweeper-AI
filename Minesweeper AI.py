@@ -68,24 +68,28 @@ class Grid:
         unflagged = self.adj_unflagged()
         for i in unflagged:
             grids[i].prob = (self.num - self.n_mines()) * 100 / len(unflagged)
+        n = 0
         mines_found = 0
         for i in self.adj_unflagged():
             if grids[i].prob == 0:
                 grids[i].click()
+                n += 1
             elif grids[i].prob == 100:
                 grids[i].right_click()
+                n += 1
                 mines_found += 1
-        return mines_found
+        return n, mines_found
 
     def click(self):
         pyautogui.click((self.cent_x+Grid.board_x)/2,(self.cent_y+Grid.board_y)/2)
         self.flipped = True
-    
+
     def right_click(self):
         pyautogui.rightClick((self.cent_x+Grid.board_x)/2,(self.cent_y + Grid.board_y)/2)
         self.flagged = True
 
     def subset_elimination(self):
+        n = 0
         mines_found = 0
         for i in self.adj_nums():
             list1 = self.adj_unflagged()
@@ -96,19 +100,13 @@ class Grid:
                 if len(unique) == diff:
                     for j in unique:
                         grids[j].right_click()
+                        n += 1
                         mines_found += 1
                 elif diff == 0:
                     for j in unique:
+                        n += 1
                         grids[j].click()
-        return mines_found
-
-    def touching(self):
-        l = []
-        for i in [-Grid.columns,-1,1,Grid.columns]:
-            n = self.index + i
-            if n >= 0 and n < Grid.rows * Grid.columns and abs(self.column - n % Grid.columns) <= 1:
-                l.append(n)
-        return l
+        return n, mines_found
 
     def find_path(n, previous, useful_unflagged):
         base_case = True
@@ -223,6 +221,7 @@ def proc_img():
         for i in range(rows):
             for j in range(columns):
                 grids.append(Grid(1+j*(w+2), 1+i*(w+2), i*columns+j))
+
     #unflipped: 101 214 179, 94  208 172 137 224 198 131 220 192
     #0:         163 195 223, 157 185 210
     #1:         203 116 56
@@ -271,10 +270,15 @@ def proc_img():
     return nums, True
 
 def solve():
+    n = 0
     mines_found = 0
     for i in nums:
-        mines_found += grids[i].calculate()
-        mines_found += grids[i].subset_elimination()
+        n1, mines_found1 = grids[i].calculate()
+        n += n1
+        mines_found += mines_found1
+        n1, mines_found1 = grids[i].subset_elimination()
+        n += n1
+        mines_found += mines_found1
 
     useful_unflagged = []
     for i in grids:
@@ -287,8 +291,9 @@ def solve():
         list_locations.append(Grid.find_path(useful_unflagged[0], [], useful_unflagged))
         useful_unflagged = [j for j in useful_unflagged if j not in list_locations[-1]]
     for j in list_locations:
+        print(len(j))
         dict = {k : 0 for k in j}
-        arrangements = Grid.tank_solver(j, [], dict)
+        arrangements = Grid.tank_solver(j, [], dict, Grid.mines_remaining - mines_found)
         for k in dict:
             if dict[k] == arrangements:
                 grids[k].right_click()
@@ -297,22 +302,21 @@ def solve():
             elif dict[k] == 0:
                 grids[k].click()
                 n += 1
+
     if n == 0:
         remaining_tiles = []
         for i in grids:
             if i.flipped == False and i.flagged == False:
                 remaining_tiles.append(i.index)
         if len(remaining_tiles) > 10:
-            return 0
+            return
         else:
             dict = {i : 0 for i in remaining_tiles}
-            Grid.end_game(remaining_tiles, [], dict, Grid.mines_remaining - mines_found)
+            Grid.tank_solver(remaining_tiles, [], dict, Grid.mines_remaining - mines_found)
             for i in dict:
                 if dict[i] == min(dict.values()):
                     grids[i].click()
-                    n += 1
-    print(n)
-    return mines_found
+    Grid.mines_remaining -= mines_found
 
 sleep(1)
 grids = []
@@ -326,4 +330,4 @@ while True:
     img = screen_shot()
     nums, found = proc_img()
     if found:
-        Grid.mines_remaining -= solve()
+        solve()
