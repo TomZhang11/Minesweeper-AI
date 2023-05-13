@@ -10,6 +10,3 @@ Algorithms created: The Straightforward Algorithm, Subset Elimination, The Tank 
 Time complexity: idk
 ChatGPT (or other AI) use: only for image processing and coding help; the algorithms are completely original. Although I got ideas of the algorithms from the internet, I did not look at their code; I just came up with them.
 Time taken to build: over 100 hours
-Date recorded: 2023-05-12
-Age of developer as of date of recording: 16
-Grade of developer as of date of recording: 11
