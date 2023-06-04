@@ -10,4 +10,4 @@ Algorithms created: The Straightforward Algorithm, Subset Elimination, The Tank 
 Time complexity: idk
 ChatGPT (or other AI) use: only for image processing and coding help; the algorithms are completely original. Although I got ideas of the algorithms from the internet, I did not look at their code; I just came up with them.
 Time taken to build: over 100 hours
-Note there is only a python script which cannot be executed directly by the computer. To execute this python script, you will need a python interpreter which can be downloaded at python's official website
+To run the executable for macbooks, unzip each of the zip files and put the files inside in a single folder and run the Minesweeper AI executable (I did this because github does not support single files over 25 MB)
