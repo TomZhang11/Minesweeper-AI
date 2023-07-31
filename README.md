@@ -2,6 +2,7 @@
 Original by Tom Zhang
 It works on my MacBook pro, and there is no guarantee that it works on other computers.
 It solves Google's minesweeper, and does not work on other versions
+Make sure to set your browser size to 100% if you want to use it
 Video of it solving minesweeper 10 times in a row: https://www.youtube.com/watch?v=zC_69iGVnCo
 Note there was a problem in the video where the AI could not solve one of the end-game circumstances, but the problem has been resolved, and I did not bother recording again; and the code here is the complete version.
 Libraries used: opencv, pyautogui
