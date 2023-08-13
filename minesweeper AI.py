@@ -472,21 +472,22 @@ def solve():
     # keep track of mines remaining
     Grid.mines_remaining -= mines_found
 
-# the list to store all square objects
-grids = []
-# cancel the pause to allow for highest speed
-pyautogui.PAUSE = 0
-# window to showcase the computer vision
-cv2.namedWindow("Screen(Computer Vision)", cv2.WINDOW_NORMAL)
-found = False
-while True:
-    sleep(0.81)
-    # if the board has been found on the screen, move the cursor out of the way to avoid interference and take a screen shot
-    if found:
-        pyautogui.moveTo(460, 80)
-    img = screen_shot()
-    # process the image
-    nums, found = proc_img()
-    if found:
-        # solve
-        solve()
+if __name__ == "__main__":
+    # the list to store all square objects
+    grids = []
+    # cancel the pause to allow for highest speed
+    pyautogui.PAUSE = 0
+    # window to showcase the computer vision
+    cv2.namedWindow("Screen(Computer Vision)", cv2.WINDOW_NORMAL)
+    found = False
+    while True:
+        sleep(0.81)
+        # if the board has been found on the screen, move the cursor out of the way to avoid interference and take a screen shot
+        if found:
+            pyautogui.moveTo(460, 80)
+        img = screen_shot()
+        # process the image
+        nums, found = proc_img()
+        if found:
+            # solve
+            solve()
